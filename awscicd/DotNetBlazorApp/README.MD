@@ -7,6 +7,7 @@ Prerequisites
 ->A Blazor WebAssembly project (e.g., named DotNetBlazorApp).
 
 Step 1: Publish the Blazor App Locally
+
     1. Navigate to your Blazor project directory in a terminal:
         cd path/to/DotNetBlazorApp
     
