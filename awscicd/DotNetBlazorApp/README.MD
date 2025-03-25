@@ -1,3 +1,5 @@
+Hosting Blazor WebAssembly on a Docker Container 
+
 When you publish a Blazor WebAssembly (WASM) app, it compiles to static files (HTML, CSS, JavaScript, and WebAssembly files) instead of generating a .dll file that a traditional .NET server-side application would produce. This is because Blazor WASM runs entirely in the browser, and the WebAssembly runtime executes the compiled .wasm files.
 
 Why Use Nginx to Serve a Blazor WebAssembly App?
@@ -124,3 +126,71 @@ Advanced Configuration (Optional)
             bin/
             obj/
     
+Hosting Blazor WebAssembly on Windows IIS
+
+Blazor WASM apps are essentially static websites, so IIS can serve them efficiently
+
+    Steps to Deploy Blazor WebAssembly on IIS
+        1. Publish the Blazor WASM App for IIS
+            Run the following command in your project folder:
+                dotnet publish -c Release -o ./publish --self-contained
+                    This creates a publish folder with all required static files inside the wwwroot folder.
+        
+        2. Install and Enable IIS (if not already installed)
+
+            --> Open Control Panel → Turn Windows features on or off
+
+            --> Enable Internet Information Services (IIS)
+
+            --> Enable IIS Management Console
+
+            --> Install IIS URL Rewrite Module (if needed)
+
+        3. Copy the Published Files to IIS Root Directory
+
+            Copy the contents of publish/wwwroot to C:\inetpub\wwwroot\your-app-folder.
+
+        4. Configure IIS to Serve the Blazor WebAssembly App
+            --> Open IIS Manager (inetmgr in Run).
+
+            --> Add a new website pointing to C:\inetpub\wwwroot\your-app-folder.
+
+            --> Set binding to the required port (default is 80).
+
+            --> Ensure the MIME types for .wasm and .json files are correctly configured.
+        5. Modify web.config for Blazor WebAssembly Create or modify web.config in your app’s folder:
+            <?xml version="1.0" encoding="utf-8"?>
+            <configuration>
+              <system.webServer>
+                <staticContent>
+                  <remove fileExtension=".wasm" />
+                  <mimeMap fileExtension=".wasm" mimeType="application/wasm" />
+                </staticContent>
+                <rewrite>
+                  <rules>
+                    <rule name="Main Rule" stopProcessing="true">
+                      <match url=".*" />
+                      <conditions logicalGrouping="MatchAll">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+                      </conditions>
+                      <action type="Rewrite" url="/index.html" />
+                    </rule>
+                  </rules>
+                </rewrite>
+              </system.webServer>
+            </configuration>
+
+            --> Ensures IIS serves .wasm files correctly.
+            --> Handles client-side routing by rewriting requests to index.html.
+        6. Restart IIS and Test
+            --> iisreset
+            --> Open a browser and go to http://localhost/your-app-folder.
+
+
+        Conclusion
+            If you are deploying in Docker, use Nginx.
+
+            If you are deploying on Windows, use IIS.
+
+            Both methods serve Blazor WebAssembly as a static website.
