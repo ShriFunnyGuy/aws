@@ -34,7 +34,9 @@ Step 2: Create the Dockerfile
             EXPOSE 80
 
 Step 3: Build the Docker Image
+
     1. In the terminal, ensure you’re in the directory containing the Dockerfile and the publish folder.
+
     2. Build the Docker image:
         docker build -t blazor-nginx-app .
 
