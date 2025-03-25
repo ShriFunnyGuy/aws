@@ -1,3 +1,19 @@
+When you publish a Blazor WebAssembly (WASM) app, it compiles to static files (HTML, CSS, JavaScript, and WebAssembly files) instead of generating a .dll file that a traditional .NET server-side application would produce. This is because Blazor WASM runs entirely in the browser, and the WebAssembly runtime executes the compiled .wasm files.
+
+Why Use Nginx to Serve a Blazor WebAssembly App?
+Since Blazor WASM is a client-side application, you need a web server to serve the static files (like .html, .css, .js, and .wasm). Unlike a traditional ASP.NET Core app, Blazor WASM does not need a backend server to execute C# logic—it just needs a static file host.
+
+Nginx is an excellent choice for this because:
+
+Lightweight & Fast: Nginx is optimized for serving static content.
+
+Efficient Caching: It can cache files for improved performance.
+
+Easy Docker Deployment: It allows easy containerization and deployment.
+
+Supports Compression: You can enable Brotli or Gzip compression to reduce load times.
+
+
 Serving a Blazor WebAssembly App with Nginx in Docker
 This guide explains how to serve a Blazor WebAssembly app using a lightweight nginx container. The process involves publishing the Blazor app locally and then building a Docker image to serve the static files.
 
